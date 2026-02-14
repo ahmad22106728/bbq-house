@@ -40,20 +40,43 @@ body {
 .top-bar {
     background-color: #ff8c00;
     display: flex;
-    justify-content: space-around;
-    padding: 10px;
+    justify-content: space-between; /* أفضل من space-around */
+    align-items: center;
+    padding: 10px 20px;
 }
 
 .top-bar a {
     color: #000;
-    font-size: 24px;
+    font-size: 18px; /* صغرناه */
     text-decoration: none;
+    font-weight: 600;
 }
-
 
 .top-bar a:hover {
     text-decoration: underline;
 }
+
+.top-bar .phone {
+    font-size: 18px;
+}
+
+/* ===== نسخة الجوال ===== */
+@media (max-width: 768px) {
+
+    .top-bar {
+        padding: 8px 12px;
+    }
+
+    .top-bar a {
+        font-size: 14px;  /* حجم مناسب للجوال */
+    }
+
+    .top-bar .phone {
+        font-size: 14px;
+    }
+
+}
+
 .logo-box {
     background-color: #ff8c00; /* برتقالي */
     padding: 9px;
@@ -62,9 +85,7 @@ body {
     align-items: center;
     justify-content: center;
 }
-.top-bar .phone {
-    font-size: 24px;
-}
+
 /* ===== صفحة آراء الزبائن ===== */
 .review-page {
     min-height: 100vh;
