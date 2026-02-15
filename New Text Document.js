@@ -104,4 +104,20 @@ topBtn.onclick = () => {
         behavior: "smooth"
     });
 };
+const filtersBar = document.getElementById("filtersBar");
+const wrapper = document.querySelector(".filters-wrapper");
+
+function checkScroll() {
+    const maxScroll = filtersBar.scrollWidth - filtersBar.clientWidth;
+
+    if (Math.abs(filtersBar.scrollLeft) >= maxScroll - 5) {
+        wrapper.classList.add("hide-arrow");   // نخفي السهم
+    } else {
+        wrapper.classList.remove("hide-arrow"); // نظهره
+    }
+}
+
+filtersBar.addEventListener("scroll", checkScroll);
+window.addEventListener("load", checkScroll);
+
 

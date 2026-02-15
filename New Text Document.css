@@ -21,21 +21,65 @@ body {
 .header-content {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* لليمين */
-    gap: 20px;
+    justify-content: flex-start;
+    gap: 35px;   /* كان 20 – خليناه أبعد شوي */
 }
 
-/* اللوجو */
+
 .logo {
-    width: 200px;
-    height: 200px;
+    width: 170px;       /* صغرناه شوي */
+    height: auto;
+    filter: drop-shadow(0 6px 15px rgba(0,0,0,0.5));
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
+.logo:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 8px 20px rgba(255,140,0,0.4));
+}
+@media (max-width: 768px) {
+    .logo {
+        width: 120px;
+    }
+}
+
 
 /* اسم المطعم */
-.header h1 {
-    font-size: 50px;
-    text-align: right;
+.header h1::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 3px;
+    margin-top: 8px;
+    border-radius: 3px;
+    background: linear-gradient(to left, #ff8c00, #ffaa33, #ff8c00);
 }
+
+
+
+@media (max-width: 768px) {
+
+    .header-content {
+        gap: 12px;   /* مسافة خفيفة بين اللوجو والاسم */
+    }
+
+
+    .header h1 {
+        font-size: 20px;   /* حجم مرتب */
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        line-height: 2;
+    }
+
+    .header h1::after {
+        width: 100%;   /* الخط بعرض الاسم */
+        height: 2px;   /* أنحف شوي */
+        margin-top: 5px;
+    }
+
+}
+
+
+
 
 .top-bar {
     background-color: #ff8c00;
@@ -78,13 +122,14 @@ body {
 }
 
 .logo-box {
-    background-color: #ff8c00; /* برتقالي */
-    padding: 9px;
-    border-radius: 9px;
+    background-color: transparent; /* شلنا البرتقالي */
+    padding: 0;                   /* شلنا الفراغ */
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 
 /* ===== صفحة آراء الزبائن ===== */
 .review-page {
@@ -332,13 +377,18 @@ button:hover {
     position: fixed;
     bottom: 20px;
     right: 15px;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
+
+    padding: 10px 14px;
+    border-radius: 25px;
+
     border: 1.5px solid #ff8800;
     background: rgba(0,0,0,0.6);
     color: #ff8800;
-    font-size: 18px;
+
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+
     cursor: pointer;
     backdrop-filter: blur(6px);
     transition: 0.3s;
@@ -418,6 +468,40 @@ button:hover {
         font-size: 14px;
     }
 }
+.filters-wrapper {
+    position: relative;
+}
+
+/* السهم */
+.filters-wrapper::after {
+    content: ">";
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    font-size: 22px;
+    color: rgba(255,255,255,0.8);
+    pointer-events: none;
+    animation: arrowMove 1.2s ease-in-out infinite;
+    transition: opacity 0.3s ease;
+}
+
+/* حركة خفيفة بدون تخبيص layout */
+@keyframes arrowMove {
+    0%   { margin-left: 0; }
+    50%  { margin-left: -5px; }
+    100% { margin-left: 0; }
+}
+
+/* إخفاء */
+.filters-wrapper.hide-arrow::after {
+    opacity: 0;
+    animation: none;
+}
+
+
+
+
 
 
 
