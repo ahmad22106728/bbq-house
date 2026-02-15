@@ -1,66 +1,140 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آراء الزبائن</title>
-    <link rel="stylesheet" href="New Text Document.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقييم المطعم</title>
+
+<style>
+body {
+    background:#111;
+    color:#fff;
+    font-family:'Cairo', sans-serif;
+    direction:rtl;
+    text-align:center;
+    padding:40px 20px;
+}
+
+h1 {
+    margin-bottom:10px;
+}
+
+p {
+    color:#aaa;
+    margin-bottom:30px;
+}
+
+.stars {
+    display:flex;
+    justify-content:center;
+    flex-direction:row-reverse;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.stars input { display:none; }
+
+.stars label {
+    font-size:40px;
+    color:#444;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.stars input:checked ~ label,
+.stars label:hover,
+.stars label:hover ~ label {
+    color:#ff8800;
+}
+
+textarea {
+    width:100%;
+    max-width:400px;
+    height:120px;
+    background:#222;
+    border:none;
+    border-radius:10px;
+    padding:12px;
+    color:white;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+button {
+    background:#ff8800;
+    border:none;
+    padding:12px 30px;
+    border-radius:30px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover {
+    opacity:0.8;
+}
+
+.review-card {
+    background:#1b1b1b;
+    padding:15px;
+    border-radius:12px;
+    margin:15px auto;
+    max-width:400px;
+    text-align:right;
+    border:1px solid #333;
+}
+
+.review-stars {
+    color:#ff8800;
+    margin-bottom:8px;
+}
+</style>
 </head>
+
 <body>
 
-<section class="review-page">
+<h1>⭐ تقييم المطعم</h1>
+<p>نشكركم على مشاركة رأيكم</p>
 
-    <h1>⭐ تقييم المطعم</h1>
-    <p>نشكركم على مشاركة رأيكم</p>
+<form id="reviewForm">
 
-    <!-- نموذج Netlify -->
-     <form name="restaurant-reviews" method="POST" data-netlify="true">
+<div class="stars">
+    <input type="radio" name="rating" id="star5" value="5" required>
+    <label for="star5">★</label>
 
-        <!-- مهم جداً -->
-        <input type="hidden" name="form-name" value="restaurant-reviews">
+    <input type="radio" name="rating" id="star4" value="4">
+    <label for="star4">★</label>
 
-        <!-- التقييم -->
-        <div class="stars">
-            <input type="radio" name="rating" id="star5" value="5" required>
-            <label for="star5">★</label>
+    <input type="radio" name="rating" id="star3" value="3">
+    <label for="star3">★</label>
 
-            <input type="radio" name="rating" id="star4" value="4">
-            <label for="star4">★</label>
+    <input type="radio" name="rating" id="star2" value="2">
+    <label for="star2">★</label>
 
-            <input type="radio" name="rating" id="star3" value="3">
-            <label for="star3">★</label>
+    <input type="radio" name="rating" id="star1" value="1">
+    <label for="star1">★</label>
+</div>
 
-            <input type="radio" name="rating" id="star2" value="2">
-            <label for="star2">★</label>
+<textarea name="comment" placeholder="اكتب رأيك هنا..." required></textarea>
 
-            <input type="radio" name="rating" id="star1" value="1">
-            <label for="star1">★</label>
-        </div>
+<br>
+<button type="submit">إرسال التقييم</button>
 
-        <!-- رأي الزبون -->
-        <textarea name="comment" placeholder="اكتب رأيك هنا..." required></textarea>
-
-        <!-- زر الإرسال -->
-        <button type="submit">إرسال التقييم</button>
-
-    </form> 
+</form>
 
 <div id="reviewsContainer"></div>
 
-
-</section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 const supabaseUrl = "https://rlrgcngpezycnlorhpqg.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJscmdjbmdwZXp5Y25sb3JocHFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMTIwMzEsImV4cCI6MjA4NjY4ODAzMX0.KVWBqgLnRe7RVVrHEaiY6erdWNWhPCMc6tYmrYuH4I4";
+const supabaseKey = "YOUR_ANON_KEY"; // 🔥 حط مفتاحك هون
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-
-// تحميل الآراء
+// تحميل التعليقات
 async function loadReviews() {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from("reviews")
         .select("*")
         .order("created_at", { ascending: false });
@@ -74,37 +148,40 @@ async function loadReviews() {
     container.innerHTML = "";
 
     data.forEach(review => {
-        const stars = "★".repeat(review.rating);
-
         container.innerHTML += `
             <div class="review-card">
-                <div class="review-stars">${stars}</div>
-                <p class="review-text">${review.comment}</p>
+                <div class="review-stars">${"⭐".repeat(review.rating)}</div>
+                <p>${review.comment}</p>
             </div>
         `;
     });
 }
 
-// حفظ رأي
-document.getElementById("reviewForm").addEventListener("submit", async (e) => {
+// إرسال التقييم
+document.getElementById("reviewForm").addEventListener("submit", async function(e){
     e.preventDefault();
 
     const rating = document.querySelector('input[name="rating"]:checked')?.value;
-    const comment = document.getElementById("comment").value;
+    const comment = document.querySelector('textarea[name="comment"]').value;
 
-    if (!rating || !comment) return alert("يرجى إدخال التقييم والنص");
+    if (!rating || !comment) {
+        alert("الرجاء إدخال التقييم والتعليق");
+        return;
+    }
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
         .from("reviews")
-        .insert([{ rating: rating, comment: comment }]);
+        .insert([{ rating: Number(rating), comment: comment }]);
 
     if (error) {
         console.error(error);
-        alert("حدث خطأ");
-    } else {
-        document.getElementById("reviewForm").reset();
-        loadReviews();
+        alert("حدث خطأ أثناء الإرسال");
+        return;
     }
+
+    alert("تم إرسال تقييمك ❤️");
+    document.getElementById("reviewForm").reset();
+    loadReviews();
 });
 
 loadReviews();
@@ -112,4 +189,3 @@ loadReviews();
 
 </body>
 </html>
-
