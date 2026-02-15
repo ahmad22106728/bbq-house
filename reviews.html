@@ -14,7 +14,7 @@
     <p>نشكركم على مشاركة رأيكم</p>
 
     <!-- نموذج Netlify -->
-    <form name="restaurant-reviews" method="POST" data-netlify="true">
+     <form name="restaurant-reviews" method="POST" data-netlify="true">
 
         <!-- مهم جداً -->
         <input type="hidden" name="form-name" value="restaurant-reviews">
@@ -43,9 +43,71 @@
         <!-- زر الإرسال -->
         <button type="submit">إرسال التقييم</button>
 
-    </form>
+    </form> 
+
+<div id="reviewsContainer"></div>
+
 
 </section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseUrl = "https://rlrgcngpezycnlorhpqg.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJscmdjbmdwZXp5Y25sb3JocHFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMTIwMzEsImV4cCI6MjA4NjY4ODAzMX0.KVWBqgLnRe7RVVrHEaiY6erdWNWhPCMc6tYmrYuH4I4";
+
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// تحميل الآراء
+async function loadReviews() {
+    const { data, error } = await supabase
+        .from("reviews")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const container = document.getElementById("reviewsContainer");
+    container.innerHTML = "";
+
+    data.forEach(review => {
+        const stars = "⭐".repeat(review.rating);
+
+        container.innerHTML += `
+            <div class="review-card">
+                <div class="review-stars">${stars}</div>
+                <p class="review-text">${review.comment}</p>
+            </div>
+        `;
+    });
+}
+
+// حفظ رأي
+document.getElementById("reviewForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const rating = document.querySelector('input[name="rating"]:checked')?.value;
+    const comment = document.getElementById("comment").value;
+
+    if (!rating || !comment) return alert("يرجى إدخال التقييم والنص");
+
+    const { error } = await supabase
+        .from("reviews")
+        .insert([{ rating: rating, comment: comment }]);
+
+    if (error) {
+        console.error(error);
+        alert("حدث خطأ");
+    } else {
+        document.getElementById("reviewForm").reset();
+        loadReviews();
+    }
+});
+
+loadReviews();
+</script>
 
 </body>
 </html>
