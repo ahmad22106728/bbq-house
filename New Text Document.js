@@ -119,5 +119,11 @@ function checkScroll() {
 
 filtersBar.addEventListener("scroll", checkScroll);
 window.addEventListener("load", checkScroll);
+//بعد رمضان بحذف الي تحت
+const today = new Date();
+const month = today.getMonth(); // 0-11
 
-
+// تقريبا رمضان غالباً شهر 2 أو 3 (حسب السنة)
+if (month === 2 || month === 3) {
+  document.body.classList.add("ramadan-mode");
+}

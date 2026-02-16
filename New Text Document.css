@@ -498,3 +498,39 @@ button:hover {
     opacity: 0;
     animation: none;
 }
+.ramadan-msg {
+    position: relative;
+    color: #ffb347;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+/* الفانوس اليمين */
+.ramadan-msg::after {
+    content: "🏮";
+    position: absolute;
+    right: -30px;
+    top: -5px;
+    font-size: 20px;
+    animation: swing 3s ease-in-out infinite;
+}
+
+/* الفانوس اليسار */
+.ramadan-msg::before {
+    content: "🏮";
+    position: absolute;
+    left: -30px;
+    top: -5px;
+    font-size: 20px;
+    animation: swing 3s ease-in-out infinite reverse;
+}
+
+/* حركة خفيفة */
+@keyframes swing {
+    0%   { transform: rotate(-5deg); }
+    50%  { transform: rotate(5deg); }
+    100% { transform: rotate(-5deg); }
+}
+
