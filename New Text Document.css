@@ -498,6 +498,7 @@ button:hover {
     opacity: 0;
     animation: none;
 }
+/*بعد رمضان بحذفها*/
 .ramadan-msg {
     position: relative;
     color: #ffb347;
